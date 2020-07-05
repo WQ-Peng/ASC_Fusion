@@ -10,3 +10,19 @@ path_feature_freesound = os.path.join(path_feature_origin, 'freesound_extractor'
 
 # original audio files freesound features
 path_feature_freesound_statistics = os.path.join(path_feature_freesound, 'statistics')
+
+#feature specific folders
+for name in ['BarkBands', 'ERBBands', 'MelBands', 'MFCC', 'HPCP', 'Tonal', 'Pitch', 'SilenceRate', 'Spectral', 'GFCC']:
+    exec('path_feature_%s = os.path.join(path_feature_origin, name)'%name)
+
+def mkdir(dirName):
+    """
+    Creat folders
+    :dirName: directory you want to creat
+    """
+    if not os.path.exists(dirName):
+        os.mkdir(dirName)
+
+if __name__ == "__main__":
+    for name in ['BarkBands', 'ERBBands', 'MelBands', 'MFCC', 'HPCP', 'Tonal', 'Pitch', 'SilenceRate', 'Spectral', 'GFCC']:
+        exec('mkdir(path_feature_%s)'%name)

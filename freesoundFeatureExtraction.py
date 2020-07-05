@@ -7,11 +7,17 @@ from multiprocessing import Process
 
 
 def statsticsCal(array, dict_seg, desc):
+    """
+    Statistical pool agregation . Just copy in this case
+    """
     dict_seg[desc] = numpy.array(array)
 
     return  dict_seg
 
 def frame_pool_aggregation(essentia_frame_pool, filename):
+    """
+    Save essentia pool to csv file, exclude useless features
+    """
     feature_frame = pd.DataFrame()
     dict_seg = {}
     # ignore all the useless features
@@ -76,6 +82,7 @@ def subprocessFeatureExtractionFrame(path_audio, path_feature_freesound_statisti
     feature_pd_DataFrame.to_csv(os.path.join(path_feature_freesound_statistics, fn.split('.')[0] + '.csv'))
 
 if __name__ == '__main__':
+    #extract features
     filenames_audio = [f for f in os.listdir(path_audio_origin) if os.path.isfile(os.path.join(path_audio_origin, f))]
     print('calculating audio feature, ', 'in total ', len(filenames_audio))
     for ii, fn in enumerate(filenames_audio):
