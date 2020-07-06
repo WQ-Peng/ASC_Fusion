@@ -1,3 +1,4 @@
+"""Extract features from audio using essentia freesound extrator and save into csv files"""
 import essentia.standard as es
 import pandas as pd
 from pathName import *
@@ -7,17 +8,13 @@ from multiprocessing import Process
 
 
 def statsticsCal(array, dict_seg, desc):
-    """
-    Statistical pool agregation . Just copy in this case
-    """
+    """Statistical pool agregation. Just copy in this case"""
     dict_seg[desc] = numpy.array(array)
 
     return  dict_seg
 
 def frame_pool_aggregation(essentia_frame_pool, filename):
-    """
-    Save essentia pool to csv file, exclude useless features
-    """
+    """Save essentia pool to csv file, exclude useless features"""
     feature_frame = pd.DataFrame()
     dict_seg = {}
     # ignore all the useless features

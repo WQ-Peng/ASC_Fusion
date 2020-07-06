@@ -1,3 +1,6 @@
+"""Paths of frequentlu used folders and func to creat them
+Change according to your computer before using them
+"""
 import os
 
 path_dcase2017_origin = '/home/nchen/pwq/dataset/train_set/TUT-acoustic-scenes-2017-development'
@@ -18,7 +21,9 @@ for name in ['BarkBands', 'ERBBands', 'MelBands', 'MFCC', 'HPCP', 'Tonal', 'Pitc
 def mkdir(dirName):
     """
     Creat folders
-    :dirName: directory you want to creat
+
+    Args:
+        dirName: directory you want to creat
     """
     if not os.path.exists(dirName):
         os.mkdir(dirName)
