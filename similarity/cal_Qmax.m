@@ -16,6 +16,8 @@ list_audio_name_temp = string(table2array(table_meta(:,1)));
 list_audio_name_temp = split(list_audio_name_temp,["/","."]);
 list_audio_name = list_audio_name_temp(:,2);    % list of audio name, eg, "b020_50_60"
 
+tic;    % timer
+
 % calculate Qmax matrix of each feature
 for featureName = ["BarkBands","ERBBands","MelBands","MFCC","HPCP","Tonal","Pitch","SilenceRate","Spectral","GFCC"]
     path_fearure_foler = join([path_feature_origin, featureName],'/');    % path of feature folder
@@ -25,16 +27,23 @@ for featureName = ["BarkBands","ERBBands","MelBands","MFCC","HPCP","Tonal","Pitc
     Qmax_measure = zeros(num_audio,num_audio);
 
     % calculate Qmax matrix
+    % upper triangular matrix
     for i=1:num_audio
-        disp(join(['Calculating similarity for audio ', i, ', feature: ', featureName]))
-        feature_1 = readmatrix(join([path_fearure_foler, "/", list_audio_name(i), ".csv"],''));
-        for j=1:num_audio
-            feature_2 = readmatrix(join([path_fearure_foler, '/', list_audio_name(i), '.csv'],''));
-            RP_temp = RP(feature_1, feature_2);
-            Qmax_measure(i,j) = Qmax(RP_temp);
+        disp(join(['Calculating similarity for audio ',i,',feature: ' featureName,',time:',toc,'s']))
+        feature_1 = readmatrix(join([path_fearure_foler,"/",list_audio_name(i),".csv"],''));
+        for j=i:num_audio
+            feature_2 = readmatrix(join([path_fearure_foler,'/',list_audio_name(j),'.csv'],''));
+            CRP_temp = CRP(feature_1, feature_2);
+            Qmax_measure(i,j) = Qmax(CRP_temp);
         end
     end
-
+    % lower triangular matrix
+    for i=1:num_audio
+        for j=1:i
+            Qmax_measure(i,j) = Qmax_measure(j,i);
+        end
+    end
+        
     % save Qmax matrix into csv file
     % use datatype 'table' to save the index
     table_Qmax = array2table(Qmax_measure,'VariableNames',list_audio_name);
