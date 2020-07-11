@@ -24,25 +24,28 @@ for featureName = ["BarkBands","ERBBands","MelBands","MFCC","HPCP","Tonal","Pitc
 
     % construct Qmax matrix
     num_audio = length(list_audio_name);
-    Qmax_measure = zeros(num_audio,num_audio);
+    gpu_Qmax = zeros(num_audio,num_audio,'gpuArray');    % use gpu
 
-    % calculate Qmax matrix
+    % calculate Qmax matrix (use gpu)
     % upper triangular matrix
     for i=1:num_audio
         disp(join(['Calculating similarity for audio ',i,',feature: ' featureName,',time:',toc,'s']))
-        feature_1 = readmatrix(join([path_fearure_foler,"/",list_audio_name(i),".csv"],''));
+        feature_1 = gpuArray(readmatrix(join([path_fearure_foler,"/",list_audio_name(i),".csv"],'')));
         for j=i:num_audio
-            feature_2 = readmatrix(join([path_fearure_foler,'/',list_audio_name(j),'.csv'],''));
+            feature_2 = gpuArray(readmatrix(join([path_fearure_foler,'/',list_audio_name(j),'.csv'],'')));
             CRP_temp = CRP(feature_1, feature_2);
-            Qmax_measure(i,j) = Qmax(CRP_temp);
+            gpu_Qmax(i,j) = Qmax(CRP_temp);
         end
     end
     % lower triangular matrix
     for i=1:num_audio
         for j=1:i
-            Qmax_measure(i,j) = Qmax_measure(j,i);
+            gpu_Qmax(i,j) = gpu_Qmax(j,i);
         end
     end
+    
+    % move from gpu
+    Qmax_measure = gather(gpu_Qmax);
         
     % save Qmax matrix into csv file
     % use datatype 'table' to save the index
