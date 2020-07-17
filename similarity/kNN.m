@@ -7,7 +7,7 @@ count_eval = length(dist_matrix(:,1));    % number of evaluation data
 % construct label matrix corresponding to dist_matrix
 label_train_matrix = repmat(label_train,count_eval,1);
 % sort distance in ascending order
-[~,Index] = sort(dist_matrix,2);
+[~,Index] = sort(dist_matrix,2,'descend');
 % sort rows in the label_train_matrix in the same order of Index
 for i=1:count_eval
     label_train_matrix(i,:) = label_train_matrix(i,Index(i,:));

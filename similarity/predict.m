@@ -1,13 +1,11 @@
-% predict with kNN
-clc
-clear
+function accuracy = predict(name,fold,k)
+%predict predict with kNN
 
 % set path
-path_feature_origin = '/home/nchen/pwq/dataset/train_set/TUT-acoustic-scenes-2017-development/feature';
-path_fearure_Qmax = join([path_feature_origin,'/Qmax'],'');
-path_fold1_train = '/home/nchen/pwq/dataset/train_set/TUT-acoustic-scenes-2017-development/evaluation_setup/fold1_train.txt';
-path_fold1_eval = '/home/nchen/pwq/dataset/train_set/TUT-acoustic-scenes-2017-development/evaluation_setup/fold1_evaluate.txt';
-path_meta = '/home/nchen/pwq/dataset/train_set/TUT-acoustic-scenes-2017-development/meta.txt';
+path_dcase2017_origin = "/home/nchen/pwq/dataset/train_set/TUT-acoustic-scenes-2017-development/";
+path_fold1_train = join([path_dcase2017_origin,"evaluation_setup/",fold,"_train.txt"],'');
+path_fold1_eval = join([path_dcase2017_origin,"evaluation_setup/",fold,"_evaluate.txt"],'');
+path_meta = join([path_dcase2017_origin,"meta.txt"],'');
 
 % list audio name
 table_meta = readtable(path_meta,'Delimiter','tab','ReadVariableNames',false);
@@ -34,13 +32,13 @@ label_eval_str = string(table2array(table_fold1_eval(:,2)));    % list of label,
 % load and reconstruct the Qmax distance matrix
 [~,Loc_train] = ismember(list_audio_train_name,list_audio_name);
 [~,Loc_eval] = ismember(list_audio_eval_name,list_audio_name);
-Qmax_all = readmatrix(join([path_fearure_Qmax,'/ERBBands.csv'],''));
-Qmax_fold1 = Qmax_all(Loc_eval,Loc_train);
+data_all = readmatrix(join([path_dcase2017_origin,"feature/",name,".csv"],''));
+data_fold = data_all(Loc_eval,Loc_train);
 
 % kNN
-label_predict = kNN(Qmax_fold1,label_train_int',100);
+label_predict = kNN(data_fold,label_train_int',k);
 % calculat the accuracy
 istrue = label_predict==label_eval_int';    % logical array
 count_true = sum(istrue.*1);    % logical-->num, then count
 accuracy = count_true/length(label_eval_int);
-disp(join(["cross-validation1: accuracy:",accuracy]));
+% disp(join(["cross-validation:",fold,",data:",name,",k:",k,",accuracy:",accuracy],''));
