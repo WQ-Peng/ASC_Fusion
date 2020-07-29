@@ -3,11 +3,11 @@ RQA with PyRQA package
 """
 
 import numpy as np
-from pyrqa.analysis_type import Classic, Cross
-from pyrqa.computation import RPComputation, RQAComputation
+from pyrqa.analysis_type import Classic
+from pyrqa.computation import RQAComputation
 from pyrqa.image_generator import ImageGenerator
 from pyrqa.metric import EuclideanMetric
-from pyrqa.neighbourhood import FAN, FixedRadius
+from pyrqa.neighbourhood import FixedRadius
 from pyrqa.settings import Settings
 from pyrqa.time_series import TimeSeries
 from pyrqa.opencl import OpenCL
@@ -17,8 +17,9 @@ def cal_rqa(path_1, path_2):
     """ calculate RQA of audio feature in file path_1 and path_2"""
 
     # opencl set up
-    #opencl = OpenCL(platform_id=0,
-    #                device_ids=(0,))
+    #opencl = OpenCL(command_line=True)
+    opencl = OpenCL(platform_id=1,
+                    device_ids=(0,))
 
     # load tiem series
     data_points_x = np.loadtxt(path_1, delimiter=',', skiprows=1)
@@ -41,7 +42,7 @@ def cal_rqa(path_1, path_2):
                         theiler_corrector=0)
 
     # calculate
-    computation = RQAComputation.create(settings,
+    computation = RQAComputation.create(settings, opencl=opencl,
                                     verbose=False)
     result = computation.run()    # chech pkg: pyrqa/result.py for result format
     return (result.to_array())[3::]
