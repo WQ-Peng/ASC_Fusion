@@ -4,9 +4,9 @@ clc
 clear
 
 % set up
-path_feature_origin = '/home/nchen/pwq/dataset/train_set/TUT-acoustic-scenes-2017-development/feature';
-path_fearure_RQA = join([path_feature_origin,'RQA'],'/');
-path_meta = '/home/nchen/pwq/dataset/train_set/TUT-acoustic-scenes-2017-development/meta.txt';
+path_feature_origin = "/home/nchen/pwq/dataset/train_set/TUT-acoustic-scenes-2017-development/feature";
+path_fearure_RQA = join([path_feature_origin,"RQA"],'/');
+path_meta = "/home/nchen/pwq/dataset/train_set/TUT-acoustic-scenes-2017-development/meta.txt";
 
 table_meta = readtable(path_meta,'Delimiter','tab','ReadVariableNames',false);
 list_audio_name_temp = string(table2array(table_meta(:,1)));
@@ -25,7 +25,7 @@ tic;    % timer
 
 % calculate RQA matrix of each feature
 for feature_name=feature_type_list
-    path_fearure_foler = join([path_feature_origin,'freesound_extractor',feature_name],'/');    % path of feature folder
+    path_fearure_foler = join([path_feature_origin,"freesound_extractor",feature_name],'/');    % path of feature folder
 
     % construct RQA matrix
     RQA_measure_temp = [];    % [(num_audio*num_audio),num_rqa_type] dimension, unshaped
